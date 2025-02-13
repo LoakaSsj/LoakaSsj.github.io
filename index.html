@@ -1,4 +1,4 @@
-PO<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -89,6 +89,16 @@ PO<!DOCTYPE html>
             align-items: center;
         }
 
+        /* Imagen de "por favor" */
+        .please-image {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: auto;
+        }
 
         /* Estilo de los mensajes "por favor" */
         .please-message {
@@ -118,8 +128,10 @@ PO<!DOCTYPE html>
                 </div>
             </div>
         </div>
-      
-        <img src="IMAGENES/1.jpg" alt="Por favor" class="please-image" id="please-image">
+        <div class="please-message-container" id="please-messages">
+            <p class="please-message" id="please-message">Por favor...</p>
+        </div>
+        <img src="IMAGENES/please.jpg" alt="Por favor" class="please-image" id="please-image">
     </div>
 
     <script>
