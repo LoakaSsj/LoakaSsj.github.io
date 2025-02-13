@@ -5,7 +5,6 @@ const questionText = document.querySelector('h1');
 const carouselImages = document.querySelector('.carousel-images');
 const prevButton = document.getElementById('prev');
 const nextButton = document.getElementById('next');
-let noCount = 0;
 let currentPosition = 0;
 let imageWidth = 0;
 
@@ -63,15 +62,26 @@ function checkOverlap(x, y) {
     );
 }
 
-// Registrar la cantidad de veces que se hizo click en "No"
+// Registrar la cantidad de veces que se hizo click en "No" y cambiar el tamaño de los botones
 noButton.addEventListener('click', () => {
-    noCount++;
+    // Reducir tamaño de "No" y aumentar tamaño de "Sí"
+    noButton.style.transform = 'scale(0.8)';
+    yesButton.style.transform = 'scale(1.2)';
+    
+    // Hacer que el "No" cambie de posición
+    const maxX = window.innerWidth - noButton.offsetWidth;
+    const maxY = window.innerHeight - noButton.offsetHeight;
+    noButton.style.position = 'absolute';
+    noButton.style.left = `${Math.random() * maxX}px`;
+    noButton.style.top = `${Math.random() * maxY}px`;
 });
 
 // Manejar el click en "Sí"
 yesButton.addEventListener('click', () => {
     document.querySelector('.buttons').style.display = 'none';
     messageDiv.style.display = 'block';
+    messageDiv.innerHTML = '<h2>TE AMO MI FLAQUITA HERMOSA</h2>'; // Mostrar el mensaje
+
     questionText.style.display = 'none';
 
     const images = carouselImages.querySelectorAll('img');
@@ -113,3 +123,4 @@ function updateCarousel() {
     carouselImages.style.transition = 'transform 0.5s ease-in-out';
     carouselImages.style.transform = `translateX(-${currentPosition * imageWidth}px)`;
 }
+
