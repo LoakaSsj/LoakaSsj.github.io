@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Proposal</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -12,25 +16,32 @@
         </div>
         <div id="message" style="display:none;">
             <h1>¡Te amo demasiado, flaquita! ❤️</h1>
-            <div class="carousel-container">
-                <button id="prev">&lt;</button>
-                <div class="carousel">
-                    <div class="carousel-images">
-                        <img src="IMAGENES/1.jpg" alt="Foto 1"> 
-                    </div>
-                    <div class="carousel-images">
+           <div class="carousel-images">
                         <img src="IMAGENES/2.jpg" alt="Foto 1"> 
                     </div>
-                </div>
-                <button id="next">&gt;</button>
-            </div>
         </div>
     </div>
-    <script src="script.js"></script>
-</body>
-</html>
+    <script>
+        const yesButton = document.getElementById('yes-button');
+        const noButton = document.getElementById('no-button');
+        const messageDiv = document.getElementById('message');
+        let noCount = 0;
 
-    </div>
-    <script src="script.js"></script>
+        noButton.addEventListener('click', () => {
+            noCount++;
+            noButton.style.fontSize = `${parseFloat(window.getComputedStyle(noButton).fontSize) * 0.8}px`;
+            noButton.style.position = 'absolute';
+            noButton.style.top = `${Math.random() * (window.innerHeight - 50)}px`;
+            noButton.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
+            yesButton.style.fontSize = `${parseFloat(window.getComputedStyle(yesButton).fontSize) * 1.2}px`;
+        });
+
+        yesButton.addEventListener('click', () => {
+            document.querySelector('.buttons').style.display = 'none';
+            messageDiv.style.display = 'block';
+        });
+    </script>
 </body>
 </html>
+                    
+           
