@@ -74,22 +74,17 @@ button {
     box-shadow: 0 0 20px rgba(204, 51, 51, 0.5);
 }
 
-/* 🎠 Carrusel */
-.carousel {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
+.carousel-images {
+    display: flex; /* Importante: Asegura que las imágenes estén en línea */
+    /* ... (resto del código CSS) */
 }
 
-.carousel-images {
-    display: flex;
-    overflow: hidden;
-    width: 300px;
-    height: 200px;
+.carousel-images img {
+    width: 100%; /* Ocupa todo el ancho del contenedor individual */
+    height: 100%;
+    object-fit: cover;
+    /* transition: transform 0.5s ease-in-out;  ¡La transición va en el JS! */
     border-radius: 15px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .carousel-images img {
