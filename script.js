@@ -8,14 +8,42 @@ const nextButton = document.getElementById('next');
 let noCount = 0;
 let currentPosition = 0;
 let imageWidth = 0;
-// ... (código para el botón "No")
+
+// Hacer que el botón "No" huya cuando el mouse se acerque
+noButton.addEventListener('mousemove', (event) => {
+    const buffer = 50;
+    const rect = noButton.getBoundingClientRect();
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+
+    if (
+        mouseX > rect.left - buffer && mouseX < rect.right + buffer &&
+        mouseY > rect.top - buffer && mouseY < rect.bottom + buffer
+    ) {
+        const maxX = window.innerWidth - noButton.offsetWidth;
+        const maxY = window.innerHeight - noButton.offsetHeight;
+
+        const randomX = Math.random() * maxX;
+        const randomY = Math.random() * maxY;
+
+        noButton.style.position = 'absolute';
+        noButton.style.left = `${randomX}px`;
+        noButton.style.top = `${randomY}px`;
+    }
+});
+
+// Registrar la cantidad de veces que se hizo click en "No"
+noButton.addEventListener('click', () => {
+    noCount++;
+});
 
 // Manejar el click en "Sí"
 yesButton.addEventListener('click', () => {
-    // ... (código para mostrar el mensaje)
+    document.querySelector('.buttons').style.display = 'none';
+    messageDiv.style.display = 'block';
+    questionText.style.display = 'none';
 
-    // Esperar a que las imágenes se carguen completamente
-   const images = carouselImages.querySelectorAll('img');
+    const images = carouselImages.querySelectorAll('img');
     let imagesLoaded = 0;
     images.forEach(img => {
         if (img.complete) {
@@ -34,14 +62,12 @@ yesButton.addEventListener('click', () => {
     });
 });
 
-
 function calculateImageWidth() {
     imageWidth = carouselImages.querySelector('img').offsetWidth;
     updateCarousel();
 }
 
-// Carrusel de imágenes (código corregido)
-
+// Carrusel de imágenes
 nextButton.addEventListener('click', () => {
     currentPosition = (currentPosition + 1) % carouselImages.children.length;
     updateCarousel();
@@ -51,6 +77,11 @@ prevButton.addEventListener('click', () => {
     currentPosition = (currentPosition - 1 + carouselImages.children.length) % carouselImages.children.length;
     updateCarousel();
 });
+
+function updateCarousel() {
+    carouselImages.style.transition = 'transform 0.5s ease-in-out';
+    carouselImages.style.transform = `translateX(-${currentPosition * imageWidth}px)`;
+}
 
 function updateCarousel() {
     carouselImages.style.transition = 'transform 0.5s ease-in-out'; // Transición aquí
