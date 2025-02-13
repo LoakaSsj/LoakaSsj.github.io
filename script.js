@@ -6,7 +6,7 @@ const carouselImages = document.querySelector('.carousel-images');
 const prevButton = document.getElementById('prev');
 const nextButton = document.getElementById('next');
 let noCount = 0;
-let index = 0;
+let currentPosition = 0; // Para el carrusel
 
 // Hacer que el botón "No" huya cuando el mouse se acerque
 noButton.addEventListener('mousemove', (event) => {
@@ -21,10 +21,10 @@ noButton.addEventListener('mousemove', (event) => {
     ) {
         const maxX = window.innerWidth - noButton.offsetWidth;
         const maxY = window.innerHeight - noButton.offsetHeight;
-        
+
         const randomX = Math.random() * maxX;
         const randomY = Math.random() * maxY;
-        
+
         noButton.style.position = 'absolute';
         noButton.style.left = `${randomX}px`;
         noButton.style.top = `${randomY}px`;
@@ -42,8 +42,14 @@ yesButton.addEventListener('click', () => {
     messageDiv.style.display = 'block';
     questionText.style.display = 'none'; // Ocultar la pregunta
 
-    // Enviar solicitud al servidor para registrar el log y mandar correo
-    fetch('/send_email', {
+    // Calcula el ancho de la imagen DESPUÉS de que el mensaje sea visible
+    setTimeout(() => {
+        imageWidth = document.querySelector('.carousel-images img').offsetWidth;
+    }, 0);
+
+    // Enviar solicitud al servidor para registrar el log y mandar correo (si es necesario)
+    /*
+    fetch('/send_email', { 
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -58,33 +64,23 @@ yesButton.addEventListener('click', () => {
             console.error('Error al enviar correo:', data.error);
         }
     });
+    */
 });
 
-// Función para cambiar la imagen en el carrusel
-function updateCarousel() {
-    const images = document.querySelectorAll('.carousel-images img');
-    const imageWidth = images[0].clientWidth;
-    carouselImages.style.transform = `translateX(-${index * imageWidth}px)`;
-}
 
-// Botón siguiente
+// Carrusel de imágenes (código corregido)
+let imageWidth = 0; // Inicializar
+
 nextButton.addEventListener('click', () => {
-    const images = document.querySelectorAll('.carousel-images img');
-    if (index < images.length - 1) {
-        index++;
-    } else {
-        index = 0; // Regresa al inicio
-    }
+    currentPosition = (currentPosition + 1) % carouselImages.children.length;
     updateCarousel();
 });
 
-// Botón anterior
 prevButton.addEventListener('click', () => {
-    const images = document.querySelectorAll('.carousel-images img');
-    if (index > 0) {
-        index--;
-    } else {
-        index = images.length - 1; // Va al final
-    }
+    currentPosition = (currentPosition - 1 + carouselImages.children.length) % carouselImages.children.length;
     updateCarousel();
 });
+
+function updateCarousel() {
+    carouselImages.style.transform = `translateX(-${currentPosition * imageWidth}px)`;
+}
