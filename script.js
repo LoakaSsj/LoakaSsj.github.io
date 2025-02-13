@@ -86,9 +86,7 @@ function updateCarousel() {
 
 
 
-
-
-const yesButton = document.getElementById('yes-button');
+onst yesButton = document.getElementById('yes-button');
 const noButton = document.getElementById('no-button');
 const messageDiv = document.getElementById('message');
 const questionText = document.querySelector('h1');
@@ -145,3 +143,4 @@ yesButton.addEventListener('click', () => {
         }
     });
 });
+
