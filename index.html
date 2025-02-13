@@ -50,11 +50,28 @@
 
         #message {
             display: none;
+            background: linear-gradient(135deg, rgba(255, 0, 102, 0.8), rgba(255, 85, 85, 0.8)); /* Fondo en gradiente */
+            padding: 40px;
+            width: 80%; /* Cuadro más ancho y horizontal */
+            max-width: 800px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            color: white;
+            text-align: center;
+            font-family: 'Great Vibes', cursive;
+            border: 2px solid #e91e63;
+        }
+
+        #message h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
         }
 
         .carousel-images {
             position: relative;
-            width: 50%; /* Reducir aún más el tamaño del carrusel */
+            width: 100%;
             margin: 20px auto;
         }
 
@@ -70,10 +87,29 @@
             display: block;
         }
 
-        #message h1 {
-            font-size: 2.5em;
-            color: #e91e63;
-            margin-bottom: 20px;
+        /* Corazón animado (agregado para darle un toque de amor) */
+        .heart {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3em;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translateX(-50%) scale(1);
+                color: #ff3366;
+            }
+            50% {
+                transform: translateX(-50%) scale(1.2);
+                color: #ff80ab;
+            }
+            100% {
+                transform: translateX(-50%) scale(1);
+                color: #ff3366;
+            }
         }
     </style>
 </head>
@@ -85,6 +121,7 @@
             <button id="no-button">No</button>
         </div>
         <div id="message" style="display:none;">
+            <span class="heart">❤️</span>
             <h1>¡Te amo mucho, flaquita hermosa! ❤️</h1>
             <div class="carousel-images">
                 <img src="IMAGENES/2.jpg" alt="Foto 1" class="carousel-item active">
@@ -193,4 +230,3 @@
     </script>
 </body>
 </html>
-
