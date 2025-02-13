@@ -6,70 +6,41 @@ const carouselImages = document.querySelector('.carousel-images');
 const prevButton = document.getElementById('prev');
 const nextButton = document.getElementById('next');
 let noCount = 0;
-let currentPosition = 0; // Para el carrusel
+let currentPosition = 0;
+let imageWidth = 0; // Inicializar
 
-// Hacer que el botón "No" huya cuando el mouse se acerque
-noButton.addEventListener('mousemove', (event) => {
-    const buffer = 50;
-    const rect = noButton.getBoundingClientRect();
-    const mouseX = event.clientX;
-    const mouseY = event.clientY;
-
-    if (
-        mouseX > rect.left - buffer && mouseX < rect.right + buffer &&
-        mouseY > rect.top - buffer && mouseY < rect.bottom + buffer
-    ) {
-        const maxX = window.innerWidth - noButton.offsetWidth;
-        const maxY = window.innerHeight - noButton.offsetHeight;
-
-        const randomX = Math.random() * maxX;
-        const randomY = Math.random() * maxY;
-
-        noButton.style.position = 'absolute';
-        noButton.style.left = `${randomX}px`;
-        noButton.style.top = `${randomY}px`;
-    }
-});
-
-// Registrar la cantidad de veces que se hizo click en "No"
-noButton.addEventListener('click', () => {
-    noCount++;
-});
+// ... (código para el botón "No")
 
 // Manejar el click en "Sí"
 yesButton.addEventListener('click', () => {
-    document.querySelector('.buttons').style.display = 'none';
-    messageDiv.style.display = 'block';
-    questionText.style.display = 'none'; // Ocultar la pregunta
+    // ... (código para mostrar el mensaje)
 
-    // Calcula el ancho de la imagen DESPUÉS de que el mensaje sea visible
-    setTimeout(() => {
-        imageWidth = document.querySelector('.carousel-images img').offsetWidth;
-    }, 0);
-
-    // Enviar solicitud al servidor para registrar el log y mandar correo (si es necesario)
-    /*
-    fetch('/send_email', { 
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ noCount: noCount })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log('Correo enviado correctamente y log registrado.');
+    // Esperar a que las imágenes se carguen completamente
+    const images = carouselImages.querySelectorAll('img');
+    let imagesLoaded = 0;
+    images.forEach(img => {
+        if (img.complete) {
+            imagesLoaded++;
+            if (imagesLoaded === images.length) {
+                calculateImageWidth();
+            }
         } else {
-            console.error('Error al enviar correo:', data.error);
+            img.addEventListener('load', () => {
+                imagesLoaded++;
+                if (imagesLoaded === images.length) {
+                    calculateImageWidth();
+                }
+            });
         }
     });
-    */
 });
 
+function calculateImageWidth() {
+    imageWidth = carouselImages.querySelector('img').offsetWidth;
+    updateCarousel();
+}
 
 // Carrusel de imágenes (código corregido)
-let imageWidth = 0; // Inicializar
 
 nextButton.addEventListener('click', () => {
     currentPosition = (currentPosition + 1) % carouselImages.children.length;
