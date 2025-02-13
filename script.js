@@ -7,8 +7,7 @@ const prevButton = document.getElementById('prev');
 const nextButton = document.getElementById('next');
 let noCount = 0;
 let currentPosition = 0;
-let imageWidth = 0; // Inicializar
-
+let imageWidth = 0;
 // ... (código para el botón "No")
 
 // Manejar el click en "Sí"
@@ -16,7 +15,7 @@ yesButton.addEventListener('click', () => {
     // ... (código para mostrar el mensaje)
 
     // Esperar a que las imágenes se carguen completamente
-    const images = carouselImages.querySelectorAll('img');
+   const images = carouselImages.querySelectorAll('img');
     let imagesLoaded = 0;
     images.forEach(img => {
         if (img.complete) {
@@ -34,6 +33,7 @@ yesButton.addEventListener('click', () => {
         }
     });
 });
+
 
 function calculateImageWidth() {
     imageWidth = carouselImages.querySelector('img').offsetWidth;
@@ -53,5 +53,6 @@ prevButton.addEventListener('click', () => {
 });
 
 function updateCarousel() {
+    carouselImages.style.transition = 'transform 0.5s ease-in-out'; // Transición aquí
     carouselImages.style.transform = `translateX(-${currentPosition * imageWidth}px)`;
 }
