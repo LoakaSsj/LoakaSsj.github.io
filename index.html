@@ -6,6 +6,68 @@
     <title>Valentine's Proposal</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        /* Agrega tu estilo aquí */
+        body {
+            font-family: 'Great Vibes', cursive;
+            text-align: center;
+            background-color: #f4e1d2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #d50000;
+        }
+
+        .buttons {
+            margin: 20px;
+        }
+
+        button {
+            font-size: 1.5em;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff7f50;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #ff5722;
+        }
+
+        #message {
+            display: none;
+        }
+
+        .carousel-images {
+            position: relative;
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .carousel-images img {
+            width: 100%;
+            height: auto;
+            display: none;
+        }
+
+        .carousel-images img.active {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -16,17 +78,22 @@
         </div>
         <div id="message" style="display:none;">
             <h1>¡Te amo demasiado, flaquita! ❤️</h1>
-           <div class="carousel-images">
-                        <img src="IMAGENES/2.jpg" alt="Foto 1"> 
-                    </div>
+            <div class="carousel-images">
+                <img src="IMAGENES/2.jpg" alt="Foto 1" class="carousel-item active">
+                <img src="IMAGENES/3.jpg" alt="Foto 2" class="carousel-item">
+                <img src="IMAGENES/4.jpg" alt="Foto 3" class="carousel-item">
+                <!-- Agrega más imágenes si lo deseas -->
+            </div>
         </div>
     </div>
+
     <script>
         const yesButton = document.getElementById('yes-button');
         const noButton = document.getElementById('no-button');
         const messageDiv = document.getElementById('message');
         let noCount = 0;
 
+        // Cambiar tamaño y mover botón "No"
         noButton.addEventListener('click', () => {
             noCount++;
             noButton.style.fontSize = `${parseFloat(window.getComputedStyle(noButton).fontSize) * 0.8}px`;
@@ -36,12 +103,31 @@
             yesButton.style.fontSize = `${parseFloat(window.getComputedStyle(yesButton).fontSize) * 1.2}px`;
         });
 
+        // Mostrar mensaje y carrusel al hacer clic en "Sí"
         yesButton.addEventListener('click', () => {
             document.querySelector('.buttons').style.display = 'none';
             messageDiv.style.display = 'block';
         });
+
+        // Función para mostrar el carrusel de fotos automáticamente
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-images .carousel-item');
+        const totalSlides = slides.length;
+
+        function showSlide() {
+            // Ocultar la imagen actual
+            slides[currentSlide].classList.remove('active');
+            // Calcular la siguiente imagen
+            currentSlide = (currentSlide + 1) % totalSlides;
+            // Mostrar la siguiente imagen
+            slides[currentSlide].classList.add('active');
+        }
+
+        // Cambiar de foto cada 3 segundos
+        setInterval(showSlide, 3000);
     </script>
 </body>
 </html>
+
                     
            
