@@ -101,7 +101,64 @@
         const messageDiv = document.getElementById('message');
         let noCount = 0;
 
-        // Cambiar tamaño y mover botón "No"
+        // Hacer que el botón "No" huya cuando el cursor se acerque
+        noButton.addEventListener('mousemove', (event) => {
+            const buffer = 50;  // Buffer de distancia en px
+            const rect = noButton.getBoundingClientRect();
+            const mouseX = event.clientX;
+            const mouseY = event.clientY;
+
+            // Verifica si el mouse está cerca del botón "No"
+            if (
+                mouseX > rect.left - buffer && mouseX < rect.right + buffer &&
+                mouseY > rect.top - buffer && mouseY < rect.bottom + buffer
+            ) {
+                let newX, newY;
+                let attempts = 0;
+
+                do {
+                    // Generar una nueva posición aleatoria dentro de la ventana
+                    const maxX = window.innerWidth - noButton.offsetWidth;
+                    const maxY = window.innerHeight - noButton.offsetHeight;
+
+                    newX = Math.random() * maxX;
+                    newY = Math.random() * maxY;
+
+                    attempts++;
+
+                    // Si no se encuentra una posición válida después de 100 intentos, salir
+                    if (attempts > 100) {
+                        console.warn("No se encontró una posición válida después de 100 intentos.");
+                        break;
+                    }
+
+                } while (checkOverlap(newX, newY));  // Verificar que no se superponga con "Sí"
+
+                noButton.style.position = 'absolute';
+                noButton.style.left = `${newX}px`;
+                noButton.style.top = `${newY}px`;
+            }
+        });
+
+        // Función para verificar si el botón "No" se superpone con el botón "Sí"
+        function checkOverlap(x, y) {
+            const yesRect = yesButton.getBoundingClientRect();
+            const noRect = {
+                left: x,
+                top: y,
+                right: x + noButton.offsetWidth,
+                bottom: y + noButton.offsetHeight
+            };
+
+            return !(
+                noRect.right < yesRect.left ||
+                noRect.left > yesRect.right ||
+                noRect.bottom < yesRect.top ||
+                noRect.top > yesRect.bottom
+            );
+        }
+
+        // Cambiar tamaño y mover botón "No" cuando se hace click
         noButton.addEventListener('click', () => {
             noCount++;
             noButton.style.fontSize = `${parseFloat(window.getComputedStyle(noButton).fontSize) * 0.8}px`;
@@ -136,3 +193,4 @@
     </script>
 </body>
 </html>
+
