@@ -89,8 +89,8 @@
             align-items: center;
         }
 
-        /* Imagen de "en serio?" */
-        .seriously-image {
+        /* Imagen de "por favor" */
+        .please-image {
             display: none;
             position: absolute;
             top: 50%;
@@ -98,6 +98,13 @@
             transform: translate(-50%, -50%);
             width: 300px;
             height: auto;
+        }
+
+        /* Estilo de los mensajes "por favor" */
+        .please-message {
+            font-size: 1.5em;
+            color: #ff4081;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -121,7 +128,10 @@
                 </div>
             </div>
         </div>
-        <img src="IMAGENES/seriously.jpg" alt="¿En serio?" class="seriously-image" id="seriously-image">
+        <div class="please-message-container" id="please-messages">
+            <p class="please-message" id="please-message">Por favor...</p>
+        </div>
+        <img src="IMAGENES/please.jpg" alt="Por favor" class="please-image" id="please-image">
     </div>
 
     <script>
@@ -131,7 +141,9 @@
         const questionText = document.getElementById('question-text');
         const carouselImages = document.querySelector('.carousel-images');
         const slides = carouselImages.querySelectorAll('img');
-        const seriouslyImage = document.getElementById('seriously-image');
+        const pleaseMessage = document.getElementById('please-message');
+        const pleaseMessageContainer = document.getElementById('please-messages');
+        const seriouslyImage = document.getElementById('please-image');
         let noCount = 0;
         let currentSlide = 0;
         let noButtonMoveCount = 0;
@@ -151,11 +163,12 @@
                 noButton.style.top = `${Math.random() * (window.innerHeight - 50)}px`;
                 noButtonMoveCount++;
 
-                // Añadir "¿En serio?" al mensaje
-                questionText.innerText = `¿Quieres ser mi San Valentín? ¿En serio?`;
+                // Añadir "Por favor..." al mensaje
+                pleaseMessage.innerText = "Por favor...";
 
-                // Mostrar imagen "¿En serio?" después de 3 movimientos
+                // Mostrar nuevo mensaje "Por favor!" después de 3 movimientos
                 if (noButtonMoveCount === 3) {
+                    pleaseMessage.innerText = "Por favor!!";
                     seriouslyImage.style.display = 'block';
                     setTimeout(() => {
                         seriouslyImage.style.display = 'none';
@@ -178,6 +191,7 @@
         yesButton.addEventListener('click', () => {
             document.querySelector('.buttons').style.display = 'none';
             messageDiv.style.display = 'block';
+            questionText.style.display = 'none'; // Ocultar la frase original
         });
 
         // Acciones al hacer click en el botón "No"
@@ -188,3 +202,4 @@
     </script>
 </body>
 </html>
+
