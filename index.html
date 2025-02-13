@@ -201,6 +201,9 @@
                 noButton.style.position = 'absolute';
                 noButton.style.left = `${newX}px`;
                 noButton.style.top = `${newY}px`;
+                
+                // Aumentar tamaño del botón "Sí" cuando "No" cambia de posición
+                yesButton.style.fontSize = `${parseFloat(window.getComputedStyle(yesButton).fontSize) * 1.2}px`;
             }
         });
 
@@ -229,6 +232,8 @@
             noButton.style.position = 'absolute';
             noButton.style.top = `${Math.random() * (window.innerHeight - 50)}px`;
             noButton.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
+            
+            // Aumentar tamaño del botón "Sí" cuando "No" se mueve
             yesButton.style.fontSize = `${parseFloat(window.getComputedStyle(yesButton).fontSize) * 1.2}px`;
         });
 
@@ -247,14 +252,12 @@
         function showSlide() {
             // Ocultar la imagen actual
             slides[currentSlide].classList.remove('active');
-            // Calcular la siguiente imagen
+            // Cambiar a la siguiente imagen
             currentSlide = (currentSlide + 1) % totalSlides;
-            // Mostrar la siguiente imagen
             slides[currentSlide].classList.add('active');
         }
 
-        // Cambiar de foto cada 3 segundos
-        setInterval(showSlide, 3000);
+        setInterval(showSlide, 3000); // Cambiar cada 3 segundos
     </script>
 </body>
 </html>
