@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,19 +14,30 @@
             <button id="yes-button">Sí</button>
             <button id="no-button">No</button>
         </div>
-       <div id="message" style="display:none;">
-    <h1>¡Te amo demasiado, flaquita! ❤️</h1>
-    <div class="carousel">
-        <button id="prev">&lt;</button>
-        <div class="carousel-images">
-            <img src="img1.jpg" alt="Foto 1">
-            <img src="img2.jpg" alt="Foto 2">
-            <img src="img3.jpg" alt="Foto 3">
-            <img src="img4.jpg" alt="Foto 4">
+
+        <!-- Mensaje que se muestra cuando se presiona "Sí" -->
+        <div id="message" style="display:none;">
+            <h1>¡Te amo demasiado, flaquita! ❤️</h1>
+
+            <!-- Carrusel de imágenes -->
+            <div class="carousel-container">
+                <button id="prev">&lt;</button>
+                <div class="carousel">
+                    <div class="carousel-images">
+                        <img src="img1.jpg" alt="Foto 1">
+                        <img src="img2.jpg" alt="Foto 2">
+                        <img src="img3.jpg" alt="Foto 3">
+                        <img src="img4.jpg" alt="Foto 4">
+                    </div>
+                </div>
+                <button id="next">&gt;</button>
+            </div>
         </div>
-        <button id="next">&gt;</button>
     </div>
-</div>
+    <script src="script.js"></script>
+</body>
+</html>
+
 
     </div>
     <script src="script.js"></script>
