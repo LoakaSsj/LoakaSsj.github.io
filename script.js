@@ -20,17 +20,48 @@ noButton.addEventListener('mousemove', (event) => {
         mouseX > rect.left - buffer && mouseX < rect.right + buffer &&
         mouseY > rect.top - buffer && mouseY < rect.bottom + buffer
     ) {
-        const maxX = window.innerWidth - noButton.offsetWidth;
-        const maxY = window.innerHeight - noButton.offsetHeight;
+        let newX, newY;
+        let attempts = 0;
 
-        const randomX = Math.random() * maxX;
-        const randomY = Math.random() * maxY;
+        do {
+            const maxX = window.innerWidth - noButton.offsetWidth;
+            const maxY = window.innerHeight - noButton.offsetHeight;
+
+            newX = Math.random() * maxX;
+            newY = Math.random() * maxY;
+
+            attempts++;
+
+            if (attempts > 100) {
+                console.warn("No se encontró una posición válida después de 100 intentos.");
+                break;
+            }
+
+        } while (checkOverlap(newX, newY));
 
         noButton.style.position = 'absolute';
-        noButton.style.left = `${randomX}px`;
-        noButton.style.top = `${randomY}px`;
+        noButton.style.left = `${newX}px`;
+        noButton.style.top = `${newY}px`;
     }
 });
+
+// Función para verificar si el botón "No" se superpone con el botón "Sí"
+function checkOverlap(x, y) {
+    const yesRect = yesButton.getBoundingClientRect();
+    const noRect = {
+        left: x,
+        top: y,
+        right: x + noButton.offsetWidth,
+        bottom: y + noButton.offsetHeight
+    };
+
+    return !(
+        noRect.right < yesRect.left ||
+        noRect.left > yesRect.right ||
+        noRect.bottom < yesRect.top ||
+        noRect.top > yesRect.bottom
+    );
+}
 
 // Registrar la cantidad de veces que se hizo click en "No"
 noButton.addEventListener('click', () => {
@@ -82,65 +113,3 @@ function updateCarousel() {
     carouselImages.style.transition = 'transform 0.5s ease-in-out';
     carouselImages.style.transform = `translateX(-${currentPosition * imageWidth}px)`;
 }
-
-
-
-
-onst yesButton = document.getElementById('yes-button');
-const noButton = document.getElementById('no-button');
-const messageDiv = document.getElementById('message');
-const questionText = document.querySelector('h1');
-let noCount = 0;
-
-// Hacer que el botón "No" huya cuando el mouse se acerque
-noButton.addEventListener('mousemove', (event) => {
-    const buffer = 50; // Distancia en la que el botón empieza a moverse
-    const rect = noButton.getBoundingClientRect();
-    const mouseX = event.clientX;
-    const mouseY = event.clientY;
-
-    if (
-        mouseX > rect.left - buffer && mouseX < rect.right + buffer &&
-        mouseY > rect.top - buffer && mouseY < rect.bottom + buffer
-    ) {
-        const maxX = window.innerWidth - noButton.offsetWidth;
-        const maxY = window.innerHeight - noButton.offsetHeight;
-        
-        const randomX = Math.random() * maxX;
-        const randomY = Math.random() * maxY;
-        
-        noButton.style.position = 'absolute';
-        noButton.style.left = `${randomX}px`;
-        noButton.style.top = `${randomY}px`;
-    }
-});
-
-// Registrar la cantidad de veces que se hizo click en "No"
-noButton.addEventListener('click', () => {
-    noCount++;
-});
-
-// Manejar el click en "Sí"
-yesButton.addEventListener('click', () => {
-    document.querySelector('.buttons').style.display = 'none';
-    messageDiv.style.display = 'block';
-    questionText.style.display = 'none'; // Ocultar la pregunta
-
-    // Enviar solicitud al servidor para registrar el log y mandar correo
-    fetch('/send_email', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ noCount: noCount })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log('Correo enviado correctamente y log registrado.');
-        } else {
-            console.error('Error al enviar correo:', data.error);
-        }
-    });
-});
-
