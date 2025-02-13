@@ -3,16 +3,20 @@ const noButton = document.getElementById('no-button');
 const messageDiv = document.getElementById('message');
 let noCount = 0;
 
-noButton.addEventListener('click', () => {
-    noCount++;
-    noButton.style.fontSize = `${parseFloat(window.getComputedStyle(noButton).fontSize) * 0.8}px`;
+noButton.addEventListener('mouseover', () => {
+    const maxX = window.innerWidth - noButton.offsetWidth;
+    const maxY = window.innerHeight - noButton.offsetHeight;
+    
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
+    
     noButton.style.position = 'absolute';
-    noButton.style.top = `${Math.random() * (window.innerHeight - 50)}px`;
-    noButton.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
-    yesButton.style.fontSize = `${parseFloat(window.getComputedStyle(yesButton).fontSize) * 1.2}px`;
+    noButton.style.left = `${randomX}px`;
+    noButton.style.top = `${randomY}px`;
 });
 
 yesButton.addEventListener('click', () => {
     document.querySelector('.buttons').style.display = 'none';
     messageDiv.style.display = 'block';
 });
+
