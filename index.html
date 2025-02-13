@@ -29,14 +29,17 @@
             color: #d50000;
         }
 
+        /* Botones con alineación */
         .buttons {
             margin: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Añadimos espacio entre los botones */
         }
 
         button {
             font-size: 1.5em;
             padding: 10px 20px;
-            margin: 10px;
             cursor: pointer;
             border: none;
             border-radius: 5px;
@@ -48,6 +51,7 @@
             background-color: #ff5722;
         }
 
+        /* Cuadro con mensaje de San Valentín */
         #message {
             display: none;
             background: linear-gradient(135deg, rgba(255, 0, 102, 0.8), rgba(255, 85, 85, 0.8)); /* Fondo en gradiente */
@@ -69,22 +73,18 @@
             margin-bottom: 20px;
         }
 
-        .carousel-images {
-            position: relative;
-            width: 100%;
-            margin: 20px auto;
-        }
-
-        .carousel-images img {
-            width: 100%; /* Redimensionar las imágenes */
-            height: auto;
-            display: none;
-            border-radius: 10px; /* Bordes redondeados */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
-        }
-
-        .carousel-images img.active {
-            display: block;
+        /* Cuadro de mensaje inicial */
+        #initial-message {
+            background-color: #fff;
+            padding: 20px;
+            width: 70%; /* Hacer el cuadro más horizontal */
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            color: #d50000;
+            font-size: 2em;
+            border: 2px solid #ff7f50;
+            margin-bottom: 20px;
         }
 
         /* Corazón animado (agregado para darle un toque de amor) */
@@ -111,15 +111,41 @@
                 color: #ff3366;
             }
         }
+
+        /* Carrusel de imágenes */
+        .carousel-images {
+            position: relative;
+            width: 100%;
+            margin: 20px auto;
+        }
+
+        .carousel-images img {
+            width: 50%; /* Redimensionar las imágenes al 50% */
+            height: auto;
+            display: none;
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+        }
+
+        .carousel-images img.active {
+            display: block;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>¿Quieres ser mi San Valentín?</h1>
+        <!-- Mensaje de "¿Quieres ser mi San Valentín?" -->
+        <div id="initial-message">
+            <h1>¿Quieres ser mi San Valentín? 💖</h1>
+        </div>
+
         <div class="buttons">
             <button id="yes-button">Sí</button>
             <button id="no-button">No</button>
         </div>
+
+        <!-- Mensaje final después de aceptar -->
         <div id="message" style="display:none;">
             <span class="heart">❤️</span>
             <h1>¡Te amo mucho, flaquita hermosa! ❤️</h1>
@@ -136,6 +162,7 @@
         const yesButton = document.getElementById('yes-button');
         const noButton = document.getElementById('no-button');
         const messageDiv = document.getElementById('message');
+        const initialMessageDiv = document.getElementById('initial-message');
         let noCount = 0;
 
         // Hacer que el botón "No" huya cuando el cursor se acerque
@@ -208,7 +235,8 @@
         // Mostrar mensaje y carrusel al hacer clic en "Sí"
         yesButton.addEventListener('click', () => {
             document.querySelector('.buttons').style.display = 'none';
-            messageDiv.style.display = 'block';
+            initialMessageDiv.style.display = 'none'; // Ocultar mensaje inicial
+            messageDiv.style.display = 'block'; // Mostrar el mensaje de "Te amo"
         });
 
         // Función para mostrar el carrusel de fotos automáticamente
