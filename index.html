@@ -29,12 +29,12 @@
             color: #d50000;
         }
 
-        /* Botones con alineación */
+        /* Botones */
         .buttons {
             margin: 20px;
             display: flex;
             justify-content: center;
-            gap: 20px; /* Añadimos espacio entre los botones */
+            gap: 20px;
         }
 
         button {
@@ -45,51 +45,14 @@
             border-radius: 10px;
             background-color: #ff4081;
             color: white;
-            transition: transform 0.2s ease;
+            transition: transform 0.2s ease, font-size 0.2s ease;
         }
 
         button:hover {
             transform: scale(1.1);
         }
 
-        /* Estilos para el carrusel */
-        .carousel-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        .carousel-images {
-            display: flex;
-            overflow: hidden;
-            width: 300px; /* Tamaño del carrusel */
-            height: 200px; /* Ajusta esto a las dimensiones que quieras */
-            margin-right: 20px; /* Espacio entre el carrusel y la frase */
-        }
-
-        .carousel-images img {
-            width: 100%;
-            height: auto;
-            display: none;
-        }
-
-        .carousel-images img.active {
-            display: block;
-        }
-
-        /* Estilo de la frase junto al carrusel */
-        .message-side {
-            font-size: 1.5em;
-            color: #ff4081;
-            font-weight: bold;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Imagen de "por favor" */
+        /* Imagen "por favor" */
         .please-image {
             display: none;
             position: absolute;
@@ -98,13 +61,6 @@
             transform: translate(-50%, -50%);
             width: 300px;
             height: auto;
-        }
-
-        /* Estilo de los mensajes "por favor" */
-        .please-message {
-            font-size: 1.5em;
-            color: #ff4081;
-            font-weight: bold;
         }
     </style>
 </head>
@@ -117,37 +73,18 @@
         </div>
         <div id="message" style="display:none;">
             <h1>¡Te amo mucho, flaquita hermosa! ❤️</h1>
-            <div class="carousel-container">
-                <div class="carousel-images">
-                    <img src="IMAGENES/2.jpg" alt="Foto 1" class="active">
-                    <img src="IMAGENES/3.jpg" alt="Foto 2">
-                    <img src="IMAGENES/4.jpg" alt="Foto 3">
-                </div>
-                <div class="message-side">
-                    <p>¡Ya sabía que ibas a decir que sí! 💖</p>
-                </div>
-            </div>
         </div>
-      
-        <img src="0.png" alt="Foto 1" class="please-image" id="please-image">
+        <img src="0.png" alt="Por favor" class="please-image" id="please-image">
     </div>
 
     <script>
         const yesButton = document.getElementById('yes-button');
         const noButton = document.getElementById('no-button');
-        const messageDiv = document.getElementById('message');
         const questionText = document.getElementById('question-text');
-        const carouselImages = document.querySelector('.carousel-images');
-        const slides = carouselImages.querySelectorAll('img');
-        const pleaseMessage = document.getElementById('please-message');
-        const pleaseMessageContainer = document.getElementById('please-messages');
-        const seriouslyImage = document.getElementById('please-image');
-        let noCount = 0;
-        let currentSlide = 0;
+        const pleaseImage = document.getElementById('please-image');
         let noButtonMoveCount = 0;
         let porFavorCount = 0;
 
-        // Mover el botón "No" y cambiar tamaño de "Sí"
         noButton.addEventListener('mousemove', () => {
             const rect = noButton.getBoundingClientRect();
             const mouseX = event.clientX;
@@ -158,48 +95,41 @@
                 mouseY > rect.top - 50 && mouseY < rect.bottom + 50
             ) {
                 noButton.style.position = 'absolute';
-                noButton.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
-                noButton.style.top = `${Math.random() * (window.innerHeight - 50)}px`;
+                noButton.style.left = `${Math.random() * (window.innerWidth - 100)}px`;
+                noButton.style.top = `${Math.random() * (window.innerHeight - 100)}px`;
                 noButtonMoveCount++;
 
-                // Añadir "Por favor..." al mensaje
+                // Reducir tamaño del "No" con cada movimiento (mínimo 10px)
+                let noSize = parseFloat(window.getComputedStyle(noButton).fontSize);
+                noButton.style.fontSize = `${Math.max(noSize * 0.9, 10)}px`;
+
+                // Aumentar tamaño del "Sí"
+                let yesSize = parseFloat(window.getComputedStyle(yesButton).fontSize);
+                yesButton.style.fontSize = `${yesSize * 1.1}px`;
+
+                // Cada 3 movimientos del "No", agregar "¡Por favor!"
                 if (noButtonMoveCount % 3 === 0) {
                     porFavorCount++;
                     questionText.innerText = `¿Quieres ser mi San Valentín?${" ¡Por favor!".repeat(porFavorCount)}`;
                 }
 
-                // Mostrar nueva imagen de "Por favor!" después de 4 movimientos
-                if (noButtonMoveCount === 4) {
-                    seriouslyImage.style.display = 'block';
+                // Cada 4 movimientos del "No", mostrar la imagen "Por favor!" por 3 segundos
+                if (noButtonMoveCount % 4 === 0) {
+                    pleaseImage.style.display = 'block';
                     setTimeout(() => {
-                        seriouslyImage.style.display = 'none';
-                    }, 3000); // La imagen desaparece después de 3 segundos
-                    noButtonMoveCount = 0; // Resetear el contador
+                        pleaseImage.style.display = 'none';
+                    }, 3000);
                 }
             }
         });
 
-        // Cambiar las imágenes del carrusel
-        function showSlide() {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }
-
-        setInterval(showSlide, 3000); // Cambiar imagen cada 3 segundos
-
-        // Acciones al hacer click en el botón "Sí"
+        // Acción al presionar "Sí"
         yesButton.addEventListener('click', () => {
             document.querySelector('.buttons').style.display = 'none';
-            messageDiv.style.display = 'block';
-            questionText.style.display = 'none'; // Ocultar la frase original
-        });
-
-        // Acciones al hacer click en el botón "No"
-        noButton.addEventListener('click', () => {
-            noButton.style.fontSize = `${parseFloat(window.getComputedStyle(noButton).fontSize) * 0.8}px`;
-            yesButton.style.fontSize = `${parseFloat(window.getComputedStyle(yesButton).fontSize) * 1.2}px`;
+            document.getElementById('message').style.display = 'block';
+            questionText.style.display = 'none';
         });
     </script>
 </body>
 </html>
+
