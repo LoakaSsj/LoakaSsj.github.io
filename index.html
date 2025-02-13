@@ -147,6 +147,7 @@
         let noCount = 0;
         let currentSlide = 0;
         let noButtonMoveCount = 0;
+        let porFavorCount = 0;
 
         // Mover el botón "No" y cambiar tamaño de "Sí"
         noButton.addEventListener('mousemove', () => {
@@ -164,15 +165,17 @@
                 noButtonMoveCount++;
 
                 // Añadir "Por favor..." al mensaje
-                pleaseMessage.innerText = "Por favor...";
+                if (noButtonMoveCount % 3 === 0) {
+                    porFavorCount++;
+                    questionText.innerText = `¿Quieres ser mi San Valentín?${" ¡Por favor!".repeat(porFavorCount)}`;
+                }
 
-                // Mostrar nuevo mensaje "Por favor!" después de 3 movimientos
-                if (noButtonMoveCount === 3) {
-                    pleaseMessage.innerText = "Por favor!!";
+                // Mostrar nueva imagen de "Por favor!" después de 4 movimientos
+                if (noButtonMoveCount === 4) {
                     seriouslyImage.style.display = 'block';
                     setTimeout(() => {
                         seriouslyImage.style.display = 'none';
-                    }, 3000);
+                    }, 3000); // La imagen desaparece después de 3 segundos
                     noButtonMoveCount = 0; // Resetear el contador
                 }
             }
@@ -202,4 +205,3 @@
     </script>
 </body>
 </html>
-
