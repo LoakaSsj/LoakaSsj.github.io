@@ -42,222 +42,149 @@
             padding: 10px 20px;
             cursor: pointer;
             border: none;
-            border-radius: 5px;
-            background-color: #ff7f50;
+            border-radius: 10px;
+            background-color: #ff4081;
             color: white;
+            transition: transform 0.2s ease;
         }
 
         button:hover {
-            background-color: #ff5722;
+            transform: scale(1.1);
         }
 
-        /* Cuadro con mensaje de San Valentín */
-        #message {
-            display: none;
-            background: linear-gradient(135deg, rgba(255, 0, 102, 0.8), rgba(255, 85, 85, 0.8)); /* Fondo en gradiente */
-            padding: 40px;
-            width: 80%; /* Cuadro más ancho y horizontal */
-            max-width: 800px;
-            border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-            color: white;
-            text-align: center;
-            font-family: 'Great Vibes', cursive;
-            border: 2px solid #e91e63;
+        /* Estilos para el carrusel */
+        .carousel-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
         }
 
-        #message h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-        }
-
-        /* Cuadro de mensaje inicial */
-        #initial-message {
-            background-color: #fff;
-            padding: 20px;
-            width: 70%; /* Hacer el cuadro más horizontal */
-            max-width: 800px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            color: #d50000;
-            font-size: 2em;
-            border: 2px solid #ff7f50;
-            margin-bottom: 20px;
-        }
-
-        /* Corazón animado (agregado para darle un toque de amor) */
-        .heart {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 3em;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: translateX(-50%) scale(1);
-                color: #ff3366;
-            }
-            50% {
-                transform: translateX(-50%) scale(1.2);
-                color: #ff80ab;
-            }
-            100% {
-                transform: translateX(-50%) scale(1);
-                color: #ff3366;
-            }
-        }
-
-        /* Carrusel de imágenes */
         .carousel-images {
-            position: relative;
-            width: 100%;
-            margin: 20px auto;
+            display: flex;
+            overflow: hidden;
+            width: 300px; /* Tamaño del carrusel */
+            height: 200px; /* Ajusta esto a las dimensiones que quieras */
+            margin-right: 20px; /* Espacio entre el carrusel y la frase */
         }
 
         .carousel-images img {
-            width: 50%; /* Redimensionar las imágenes al 50% */
+            width: 100%;
             height: auto;
             display: none;
-            border-radius: 10px; /* Bordes redondeados */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
         }
 
         .carousel-images img.active {
             display: block;
         }
 
+        /* Estilo de la frase junto al carrusel */
+        .message-side {
+            font-size: 1.5em;
+            color: #ff4081;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Imagen de "en serio?" */
+        .seriously-image {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: auto;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Mensaje de "¿Quieres ser mi San Valentín?" -->
-        <div id="initial-message">
-            <h1>¿Quieres ser mi San Valentín? 💖</h1>
-        </div>
-
+        <h1 id="question-text">¿Quieres ser mi San Valentín?</h1>
         <div class="buttons">
             <button id="yes-button">Sí</button>
             <button id="no-button">No</button>
         </div>
-
-        <!-- Mensaje final después de aceptar -->
         <div id="message" style="display:none;">
-            <span class="heart">❤️</span>
             <h1>¡Te amo mucho, flaquita hermosa! ❤️</h1>
-            <div class="carousel-images">
-                <img src="IMAGENES/2.jpg" alt="Foto 1" class="carousel-item active">
-                <img src="IMAGENES/3.jpg" alt="Foto 2" class="carousel-item">
-                <img src="IMAGENES/4.jpg" alt="Foto 3" class="carousel-item">
-                <!-- Agrega más imágenes si lo deseas -->
+            <div class="carousel-container">
+                <div class="carousel-images">
+                    <img src="IMAGENES/2.jpg" alt="Foto 1" class="active">
+                    <img src="IMAGENES/3.jpg" alt="Foto 2">
+                    <img src="IMAGENES/4.jpg" alt="Foto 3">
+                </div>
+                <div class="message-side">
+                    <p>¡Ya sabía que ibas a decir que sí! 💖</p>
+                </div>
             </div>
         </div>
+        <img src="IMAGENES/seriously.jpg" alt="¿En serio?" class="seriously-image" id="seriously-image">
     </div>
 
     <script>
         const yesButton = document.getElementById('yes-button');
         const noButton = document.getElementById('no-button');
         const messageDiv = document.getElementById('message');
-        const initialMessageDiv = document.getElementById('initial-message');
+        const questionText = document.getElementById('question-text');
+        const carouselImages = document.querySelector('.carousel-images');
+        const slides = carouselImages.querySelectorAll('img');
+        const seriouslyImage = document.getElementById('seriously-image');
         let noCount = 0;
+        let currentSlide = 0;
+        let noButtonMoveCount = 0;
 
-        // Hacer que el botón "No" huya cuando el cursor se acerque
-        noButton.addEventListener('mousemove', (event) => {
-            const buffer = 50;  // Buffer de distancia en px
+        // Mover el botón "No" y cambiar tamaño de "Sí"
+        noButton.addEventListener('mousemove', () => {
             const rect = noButton.getBoundingClientRect();
             const mouseX = event.clientX;
             const mouseY = event.clientY;
 
-            // Verifica si el mouse está cerca del botón "No"
             if (
-                mouseX > rect.left - buffer && mouseX < rect.right + buffer &&
-                mouseY > rect.top - buffer && mouseY < rect.bottom + buffer
+                mouseX > rect.left - 50 && mouseX < rect.right + 50 &&
+                mouseY > rect.top - 50 && mouseY < rect.bottom + 50
             ) {
-                let newX, newY;
-                let attempts = 0;
-
-                do {
-                    // Generar una nueva posición aleatoria dentro de la ventana
-                    const maxX = window.innerWidth - noButton.offsetWidth;
-                    const maxY = window.innerHeight - noButton.offsetHeight;
-
-                    newX = Math.random() * maxX;
-                    newY = Math.random() * maxY;
-
-                    attempts++;
-
-                    // Si no se encuentra una posición válida después de 100 intentos, salir
-                    if (attempts > 100) {
-                        console.warn("No se encontró una posición válida después de 100 intentos.");
-                        break;
-                    }
-
-                } while (checkOverlap(newX, newY));  // Verificar que no se superponga con "Sí"
-
                 noButton.style.position = 'absolute';
-                noButton.style.left = `${newX}px`;
-                noButton.style.top = `${newY}px`;
-                
-                // Aumentar tamaño del botón "Sí" cuando "No" cambia de posición
-                yesButton.style.fontSize = `${parseFloat(window.getComputedStyle(yesButton).fontSize) * 1.2}px`;
+                noButton.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
+                noButton.style.top = `${Math.random() * (window.innerHeight - 50)}px`;
+                noButtonMoveCount++;
+
+                // Añadir "¿En serio?" al mensaje
+                questionText.innerText = `¿Quieres ser mi San Valentín? ¿En serio?`;
+
+                // Mostrar imagen "¿En serio?" después de 3 movimientos
+                if (noButtonMoveCount === 3) {
+                    seriouslyImage.style.display = 'block';
+                    setTimeout(() => {
+                        seriouslyImage.style.display = 'none';
+                    }, 3000);
+                    noButtonMoveCount = 0; // Resetear el contador
+                }
             }
         });
 
-        // Función para verificar si el botón "No" se superpone con el botón "Sí"
-        function checkOverlap(x, y) {
-            const yesRect = yesButton.getBoundingClientRect();
-            const noRect = {
-                left: x,
-                top: y,
-                right: x + noButton.offsetWidth,
-                bottom: y + noButton.offsetHeight
-            };
-
-            return !(
-                noRect.right < yesRect.left ||
-                noRect.left > yesRect.right ||
-                noRect.bottom < yesRect.top ||
-                noRect.top > yesRect.bottom
-            );
-        }
-
-        // Cambiar tamaño y mover botón "No" cuando se hace click
-        noButton.addEventListener('click', () => {
-            noCount++;
-            noButton.style.fontSize = `${parseFloat(window.getComputedStyle(noButton).fontSize) * 0.8}px`;
-            noButton.style.position = 'absolute';
-            noButton.style.top = `${Math.random() * (window.innerHeight - 50)}px`;
-            noButton.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
-            
-            // Aumentar tamaño del botón "Sí" cuando "No" se mueve
-            yesButton.style.fontSize = `${parseFloat(window.getComputedStyle(yesButton).fontSize) * 1.2}px`;
-        });
-
-        // Mostrar mensaje y carrusel al hacer clic en "Sí"
-        yesButton.addEventListener('click', () => {
-            document.querySelector('.buttons').style.display = 'none';
-            initialMessageDiv.style.display = 'none'; // Ocultar mensaje inicial
-            messageDiv.style.display = 'block'; // Mostrar el mensaje de "Te amo"
-        });
-
-        // Función para mostrar el carrusel de fotos automáticamente
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.carousel-images .carousel-item');
-        const totalSlides = slides.length;
-
+        // Cambiar las imágenes del carrusel
         function showSlide() {
-            // Ocultar la imagen actual
             slides[currentSlide].classList.remove('active');
-            // Cambiar a la siguiente imagen
-            currentSlide = (currentSlide + 1) % totalSlides;
+            currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add('active');
         }
 
-        setInterval(showSlide, 3000); // Cambiar cada 3 segundos
+        setInterval(showSlide, 3000); // Cambiar imagen cada 3 segundos
+
+        // Acciones al hacer click en el botón "Sí"
+        yesButton.addEventListener('click', () => {
+            document.querySelector('.buttons').style.display = 'none';
+            messageDiv.style.display = 'block';
+        });
+
+        // Acciones al hacer click en el botón "No"
+        noButton.addEventListener('click', () => {
+            noButton.style.fontSize = `${parseFloat(window.getComputedStyle(noButton).fontSize) * 0.8}px`;
+            yesButton.style.fontSize = `${parseFloat(window.getComputedStyle(yesButton).fontSize) * 1.2}px`;
+        });
     </script>
 </body>
 </html>
