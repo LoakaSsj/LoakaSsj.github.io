@@ -90,6 +90,7 @@
         function editEntry(btn) {
             let row = btn.parentNode.parentNode;
             let name = prompt("Editar Nombre", row.cells[0].innerText);
+            
             let phone = prompt("Editar Teléfono", row.cells[1].innerText);
             if (name && phone) {
                 logAction(`Editado: ${row.cells[0].innerText} -> ${name}, ${row.cells[1].innerText} -> ${phone}`);
