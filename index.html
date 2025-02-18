@@ -1,223 +1,113 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valentine's Proposal</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <title>CRUD con Log</title>
     <style>
-        /* Estilos generales */
         body {
-            font-family: 'Great Vibes', cursive;
+            font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f4e1d2;
-            margin: 0;
-            padding: 0;
         }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+        table {
+            width: 60%;
+            margin: 20px auto;
+            border-collapse: collapse;
         }
-
-        h1 {
-            font-size: 3em;
-            color: #d50000;
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
         }
-
-        /* Botones */
-        .buttons {
-            margin: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        button {
-            font-size: 1.5em;
-            padding: 10px 20px;
-            cursor: pointer;
-            border: none;
-            border-radius: 10px;
-            background-color: #ff4081;
-            color: white;
-            transition: transform 0.2s ease, font-size 0.2s ease;
-        }
-
-        button:hover {
-            transform: scale(1.1);
-        }
-
-        /* Imagen "por favor" */
-        .please-image {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: auto;
-        }
-
-        /* Estilos del carrusel */
-        .carousel-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .log {
             margin-top: 20px;
-        }
-
-        .carousel-images {
-            display: flex;
-            overflow: hidden;
-            width: 300px;
-            height: 200px;
-            margin-right: 20px;
-        }
-
-        .carousel-images img {
-            width: 100%;
-            height: auto;
+            text-align: left;
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+            background: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ccc;
             display: none;
-        }
-
-        .carousel-images img.active {
-            display: block;
-        }
-
-        .message-side {
-            font-size: 1.5em;
-            color: #ff4081;
-            font-weight: bold;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Ocultar inicialmente el carrusel y mensaje */
-        #message {
-            display: none;
-        }
-
-        /* Estilo del botón de ver log */
-        #log-button {
-            margin-top: 20px;
-            background-color: #00796b;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 id="question-text">¿Quieres ser mi San Valentín?</h1>
-        <div class="buttons">
-            <button id="yes-button">Sí</button>
-            <button id="no-button">No</button>
-        </div>
-
-        <!-- Mensaje y carrusel (se ocultan inicialmente) -->
-        <div id="message">
-            <h1>¡Te amo mucho, flaquita hermosa! ❤️</h1>
-            <div class="carousel-container">
-                <div class="carousel-images">
-                    <img src="IMAGENES/1.jpg" alt="Foto 1" class="active">
-                    <img src="IMAGENES/2.jpg" alt="Foto 2">
-                    <img src="IMAGENES/3.jpg" alt="Foto 3">
-                    <img src="IMAGENES/4.jpg" alt="Foto 4">
-                    <img src="IMAGENES/5.jpg" alt="Foto 5">
-                </div>
-                <div class="message-side">
-                    <p>¡Ya sabía que ibas a decir que sí! 💖</p>
-                </div>
-            </div>
-        </div>
-
-        <img src="0.png" alt="Por favor" class="please-image" id="please-image">
-
-        <!-- Botón para ver el log -->
-        <button id="log-button">Ver Log</button>
-    </div>
-
+    <h2>Gestión de Contactos</h2>
+    <input type="text" id="name" placeholder="Nombre">
+    <input type="text" id="phone" placeholder="Teléfono">
+    <button onclick="addEntry()">Agregar</button>
+    <br><br>
+    <input type="text" id="search" placeholder="Buscar..." oninput="searchEntries()">
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+    <button onclick="toggleLog()">Ver Log</button>
+    <div class="log" id="log"></div>
     <script>
-        const yesButton = document.getElementById('yes-button');
-        const noButton = document.getElementById('no-button');
-        const logButton = document.getElementById('log-button');
-        const questionText = document.getElementById('question-text');
-        const messageDiv = document.getElementById('message');
-        const pleaseImage = document.getElementById('please-image');
-        const carouselImages = document.querySelector('.carousel-images');
-        const slides = carouselImages.querySelectorAll('img');
-        let noButtonMoveCount = 0;
-        let porFavorCount = 0;
-        let currentSlide = 0;
-
-        // Cargar historial de intentos previos del usuario
-        let previousTries = JSON.parse(localStorage.getItem('moveAttempts')) || [];
-
-        noButton.addEventListener('mousemove', () => {
-            const rect = noButton.getBoundingClientRect();
-            const mouseX = event.clientX;
-            const mouseY = event.clientY;
-
-            if (
-                mouseX > rect.left - 50 && mouseX < rect.right + 50 &&
-                mouseY > rect.top - 50 && mouseY < rect.bottom + 50
-            ) {
-                noButton.style.position = 'absolute';
-                noButton.style.left = `${Math.random() * (window.innerWidth - 100)}px`;
-                noButton.style.top = `${Math.random() * (window.innerHeight - 100)}px`;
-                noButtonMoveCount++;
-
-                // Guardar en el log
-                previousTries.push(noButtonMoveCount);
-                localStorage.setItem('moveAttempts', JSON.stringify(previousTries));
-
-                // Reducir tamaño del "No" con cada movimiento
-                let noSize = parseFloat(window.getComputedStyle(noButton).fontSize);
-                noButton.style.fontSize = `${Math.max(noSize * 0.9, 10)}px`;
-
-                // Aumentar tamaño del "Sí"
-                let yesSize = parseFloat(window.getComputedStyle(yesButton).fontSize);
-                yesButton.style.fontSize = `${yesSize * 1.1}px`;
-
-                // Agregar "¡Por favor!" cada 3 movimientos
-                if (noButtonMoveCount % 3 === 0) {
-                    porFavorCount++;
-                    questionText.innerText = `¿Quieres ser mi San Valentín?${" ¡Por favor!".repeat(porFavorCount)}`;
-                }
-
-                // Mostrar imagen "Por favor!" cada 4 movimientos
-                if (noButtonMoveCount % 4 === 0) {
-                    pleaseImage.style.display = 'block';
-                    setTimeout(() => {
-                        pleaseImage.style.display = 'none';
-                    }, 3000);
-                }
-            }
-        });
-
-        function showSlide() {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
+        let logArray = [];
+        
+        function logAction(action) {
+            logArray.push(action);
+            document.getElementById("log").innerHTML = logArray.join('<br>');
         }
 
-        setInterval(showSlide, 3000);
+        function toggleLog() {
+            let logDiv = document.getElementById("log");
+            logDiv.style.display = logDiv.style.display === "none" ? "block" : "none";
+        }
 
-        yesButton.addEventListener('click', () => {
-            document.querySelector('.buttons').style.display = 'none';
-            messageDiv.style.display = 'block';
-            questionText.style.display = 'none';
-        });
+        function addEntry() {
+            let name = document.getElementById("name").value;
+            let phone = document.getElementById("phone").value;
+            if (name && phone) {
+                let table = document.getElementById("table-body");
+                let row = table.insertRow();
+                row.insertCell(0).innerText = name;
+                row.insertCell(1).innerText = phone;
+                let actions = row.insertCell(2);
+                actions.innerHTML = '<button onclick="editEntry(this)">Editar</button> <button onclick="deleteEntry(this)">Eliminar</button>';
+                logAction(`Agregado: ${name}, ${phone}`);
+                document.getElementById("name").value = "";
+                document.getElementById("phone").value = "";
+            }
+        }
 
-        logButton.addEventListener('click', () => {
-            alert(`Intentos antes de decir "Sí": ${noButtonMoveCount}`);
-        });
+        function deleteEntry(btn) {
+            let row = btn.parentNode.parentNode;
+            let name = row.cells[0].innerText;
+            let phone = row.cells[1].innerText;
+            row.remove();
+            logAction(`Eliminado: ${name}, ${phone}`);
+        }
+
+        function editEntry(btn) {
+            let row = btn.parentNode.parentNode;
+            let name = prompt("Editar Nombre", row.cells[0].innerText);
+            let phone = prompt("Editar Teléfono", row.cells[1].innerText);
+            if (name && phone) {
+                logAction(`Editado: ${row.cells[0].innerText} -> ${name}, ${row.cells[1].innerText} -> ${phone}`);
+                row.cells[0].innerText = name;
+                row.cells[1].innerText = phone;
+            }
+        }
+
+        function searchEntries() {
+            let filter = document.getElementById("search").value.toLowerCase();
+            let rows = document.querySelectorAll("#table-body tr");
+            rows.forEach(row => {
+                let name = row.cells[0].innerText.toLowerCase();
+                let phone = row.cells[1].innerText.toLowerCase();
+                row.style.display = name.includes(filter) || phone.includes(filter) ? "" : "none";
+            });
+        }
     </script>
 </body>
 </html>
+
