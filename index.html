@@ -1,6 +1,16 @@
+Aquí tienes tu código actualizado con la funcionalidad de **log en LocalStorage**. Se registra cuántas veces se movió el botón "No" antes de presionar el botón "Sí", y puedes ver el registro con un nuevo botón de "Ver Log".  
+
+### 🔹 **Nuevas funciones agregadas**:
+✅ Guarda en `localStorage` el número de veces que se movió el "No".  
+✅ Agrega un botón para visualizar el log.  
+✅ Muestra una alerta con los intentos antes de aceptar la propuesta.  
+
+---
+
+### 📌 **Código actualizado**:
+```html
 <!DOCTYPE html>
 <html lang="en">
-    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -104,6 +114,12 @@
         #message {
             display: none;
         }
+
+        /* Estilo del botón de ver log */
+        #log-button {
+            margin-top: 20px;
+            background-color: #00796b;
+        }
     </style>
 </head>
 <body>
@@ -119,11 +135,11 @@
             <h1>¡Te amo mucho, flaquita hermosa! ❤️</h1>
             <div class="carousel-container">
                 <div class="carousel-images">
-                       <img src="IMAGENES/1.jpg" alt="Foto 1" class="active">
-                    <img src="IMAGENES/2.jpg" alt="Foto 2" >
+                    <img src="IMAGENES/1.jpg" alt="Foto 1" class="active">
+                    <img src="IMAGENES/2.jpg" alt="Foto 2">
                     <img src="IMAGENES/3.jpg" alt="Foto 3">
                     <img src="IMAGENES/4.jpg" alt="Foto 4">
-                       <img src="IMAGENES/5.jpg" alt="Foto 5" >
+                    <img src="IMAGENES/5.jpg" alt="Foto 5">
                 </div>
                 <div class="message-side">
                     <p>¡Ya sabía que ibas a decir que sí! 💖</p>
@@ -132,11 +148,15 @@
         </div>
 
         <img src="0.png" alt="Por favor" class="please-image" id="please-image">
+
+        <!-- Botón para ver el log -->
+        <button id="log-button">Ver Log</button>
     </div>
 
     <script>
         const yesButton = document.getElementById('yes-button');
         const noButton = document.getElementById('no-button');
+        const logButton = document.getElementById('log-button');
         const questionText = document.getElementById('question-text');
         const messageDiv = document.getElementById('message');
         const pleaseImage = document.getElementById('please-image');
@@ -145,6 +165,9 @@
         let noButtonMoveCount = 0;
         let porFavorCount = 0;
         let currentSlide = 0;
+
+        // Cargar historial de intentos previos del usuario
+        let previousTries = JSON.parse(localStorage.getItem('moveAttempts')) || [];
 
         noButton.addEventListener('mousemove', () => {
             const rect = noButton.getBoundingClientRect();
@@ -160,7 +183,11 @@
                 noButton.style.top = `${Math.random() * (window.innerHeight - 100)}px`;
                 noButtonMoveCount++;
 
-                // Reducir tamaño del "No" con cada movimiento (mínimo 10px)
+                // Guardar en el log
+                previousTries.push(noButtonMoveCount);
+                localStorage.setItem('moveAttempts', JSON.stringify(previousTries));
+
+                // Reducir tamaño del "No" con cada movimiento
                 let noSize = parseFloat(window.getComputedStyle(noButton).fontSize);
                 noButton.style.fontSize = `${Math.max(noSize * 0.9, 10)}px`;
 
@@ -168,13 +195,13 @@
                 let yesSize = parseFloat(window.getComputedStyle(yesButton).fontSize);
                 yesButton.style.fontSize = `${yesSize * 1.1}px`;
 
-                // Cada 3 movimientos del "No", agregar "¡Por favor!"
+                // Agregar "¡Por favor!" cada 3 movimientos
                 if (noButtonMoveCount % 3 === 0) {
                     porFavorCount++;
                     questionText.innerText = `¿Quieres ser mi San Valentín?${" ¡Por favor!".repeat(porFavorCount)}`;
                 }
 
-                // Cada 4 movimientos del "No", mostrar la imagen "Por favor!" por 3 segundos
+                // Mostrar imagen "Por favor!" cada 4 movimientos
                 if (noButtonMoveCount % 4 === 0) {
                     pleaseImage.style.display = 'block';
                     setTimeout(() => {
@@ -184,22 +211,25 @@
             }
         });
 
-        // Función para cambiar las imágenes del carrusel
         function showSlide() {
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add('active');
         }
 
-        // Iniciar el carrusel cada 3 segundos
         setInterval(showSlide, 3000);
 
-        // Acción al presionar "Sí"
         yesButton.addEventListener('click', () => {
-            document.querySelector('.buttons').style.display = 'none'; // Ocultar botones
-            messageDiv.style.display = 'block'; // Mostrar mensaje y carrusel
-            questionText.style.display = 'none'; // Ocultar la pregunta inicial
+            document.querySelector('.buttons').style.display = 'none';
+            messageDiv.style.display = 'block';
+            questionText.style.display = 'none';
+        });
+
+        logButton.addEventListener('click', () => {
+            alert(`Intentos antes de decir "Sí": ${noButtonMoveCount}`);
         });
     </script>
 </body>
 </html>
+```
+🔹 **Ahora puedes ver cuántas veces moviste el "No" antes de rendirte!** 😆
