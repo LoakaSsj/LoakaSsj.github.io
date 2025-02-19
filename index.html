@@ -29,30 +29,56 @@
             border: 1px solid #ccc;
             display: none;
         }
+        .login-container {
+            margin-top: 50px;
+        }
     </style>
 </head>
 <body>
-    <h2>Gestión de Contactos</h2>
-    <input type="text" id="name" placeholder="Nombre">
-    <input type="text" id="phone" placeholder="Teléfono">
-    <button onclick="addEntry()">Agregar</button>
-    <br><br>
-    <input type="text" id="search" placeholder="Buscar..." oninput="searchEntries()">
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Teléfono</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody id="table-body"></tbody>
-    </table>
-    <button onclick="toggleLog()">Ver Log</button>
-    <div class="log" id="log"></div>
+    <div id="login-container" class="login-container">
+        <h2>Iniciar Sesión</h2>
+        <input type="text" id="username" placeholder="Usuario">
+        <input type="password" id="password" placeholder="Contraseña">
+        <button onclick="login()">Ingresar</button>
+    </div>
+
+    <div id="crud-container" style="display: none;">
+        <h2>Gestión de Contactos</h2>
+        <input type="text" id="name" placeholder="Nombre">
+        <input type="text" id="phone" placeholder="Teléfono">
+        <button onclick="addEntry()">Agregar</button>
+        <br><br>
+        <input type="text" id="search" placeholder="Buscar..." oninput="searchEntries()">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+        </table>
+        <button onclick="toggleLog()">Ver Log</button>
+        <div class="log" id="log"></div>
+    </div>
+    
     <script>
         let logArray = [];
-        
+        const validUser = "admin";
+        const validPass = "1234";
+
+        function login() {
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+            if (username === validUser && password === validPass) {
+                document.getElementById("login-container").style.display = "none";
+                document.getElementById("crud-container").style.display = "block";
+            } else {
+                alert("Usuario o contraseña incorrectos");
+            }
+        }
+
         function logAction(action) {
             logArray.push(action);
             document.getElementById("log").innerHTML = logArray.join('<br>');
@@ -90,7 +116,6 @@
         function editEntry(btn) {
             let row = btn.parentNode.parentNode;
             let name = prompt("Editar Nombre", row.cells[0].innerText);
-            
             let phone = prompt("Editar Teléfono", row.cells[1].innerText);
             if (name && phone) {
                 logAction(`Editado: ${row.cells[0].innerText} -> ${name}, ${row.cells[1].innerText} -> ${phone}`);
